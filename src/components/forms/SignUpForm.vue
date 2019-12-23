@@ -33,8 +33,9 @@
 
         <b-form-group>
           <b-form-checkbox-group v-model="form.checked" id="checkboxes-4">
-            <b-form-checkbox value="me">Check me out</b-form-checkbox>
-            <b-form-checkbox value="that">Check that out</b-form-checkbox>
+            <b-form-checkbox value="accept_the_agreement"
+              >I agree to submit my data</b-form-checkbox
+            >
           </b-form-checkbox-group>
         </b-form-group>
 
@@ -49,6 +50,9 @@
 </template>
 
 <script>
+
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -65,7 +69,14 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
-      alert(JSON.stringify(this.form));
+      // alert(JSON.stringify(this.form));
+      // eslint-disable-next-line no-console
+      axios.post('/users.json',this.form).then(res => {console.log('im requesting the data');console.log(res)}).catch(err => {console.log('this is message from the error of get request');console.log(err)});
+      setTimeout(()=>{
+      // eslint-disable-next-line no-console
+      axios.get('/node1.json').then(res=>this.form=res.data).catch(err=>console.log(err));
+
+      },3000)
     },
     onReset(evt) {
       evt.preventDefault();
