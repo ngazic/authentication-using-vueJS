@@ -33,7 +33,7 @@
           console for detailed error msg.
         </p>
         <p class="text-success" v-if="success">
-          You have successfully created a signup account!!!
+          You have successfully logged in!!!
         </p>
       </b-card>
     </b-col>
@@ -41,14 +41,15 @@
 </template>
 
 <script>
-// import axios from "axios";
+import axios from "axios";
+let apiKey = "AIzaSyCHKRges3G-vbAlsrjyg6CyPzmQ-zAmJIo";
 
 export default {
   data() {
     return {
       form: {
         email: "",
-        password: "",
+        password: ""
       },
       error: false,
       success: false,
@@ -59,20 +60,24 @@ export default {
     onSubmit(evt) {
       evt.preventDefault();
       // alert(JSON.stringify(this.form));
-      // axios
-      //   .post("/users.json", this.form)
-      //   .then(res => {
-      //     this.success = true;
-      //     // eslint-disable-next-line no-console
-      //     console.log("im requesting the data");
-      //     // eslint-disable-next-line no-console
-      //     console.log(res);
-      //   })
-      //   .catch(err => {
-      //     this.error = true;
-      //     // eslint-disable-next-line no-console
-      //     console.log(err);
-      //   });
+      axios
+        .post("/accounts:signInWithPassword?key=" + apiKey, {
+          email: this.form.email,
+          password: this.form.password,
+          returnSecureToken: true
+        })
+        .then(res => {
+          this.success = true;
+          // eslint-disable-next-line no-console
+          console.log("im requesting the data");
+          // eslint-disable-next-line no-console
+          console.log(res);
+        })
+        .catch(err => {
+          this.error = true;
+          // eslint-disable-next-line no-console
+          console.log(err);
+        });
     },
     onReset(evt) {
       evt.preventDefault();

@@ -25,10 +25,11 @@
 
         <b-form-group label="Password:" label-for="input-3">
           <b-form-input
+            ref="passwrd"
             v-model="form.password"
             required
             type="password"
-            placeholder="Enter password"
+            placeholder="Enter at least 6 characters"
           ></b-form-input>
         </b-form-group>
 
@@ -82,6 +83,7 @@
 
 <script>
 import axios from "axios";
+let apiKey = "AIzaSyCHKRges3G-vbAlsrjyg6CyPzmQ-zAmJIo";
 
 export default {
   data() {
@@ -90,6 +92,7 @@ export default {
         email: "",
         name: "",
         password: "",
+        returnSecureToken: true,
         gender: null,
         agreement: null
       },
@@ -103,6 +106,10 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
+      if (this.form.password.length < 6) {
+        this.$refs.passwrd.focus();
+        alert("Enter 6 characters minimum!!!");
+      }
       if (this.$refs["confirmPassword"].value !== this.form.password) {
         alert("Please confirm correct password!!!");
         this.$refs["confirmPassword"].focus();
@@ -111,7 +118,11 @@ export default {
       // alert(JSON.stringify(this.form));
       this.error = false;
       axios
-        .post("/users.json", this.form)
+        .post("/accounts:signUp?key=" + apiKey, {
+          email: this.form.email,
+          password: this.form.password,
+          returnSecureToken: this.form.returnSecureToken
+        })
         .then(res => {
           this.success = true;
           // eslint-disable-next-line no-console
@@ -119,10 +130,12 @@ export default {
           // eslint-disable-next-line no-console
           console.log(res);
         })
-        .catch(err => {
+        .catch(error => {
           this.error = true;
           // eslint-disable-next-line no-console
-          console.log(err);
+          console.log("this is message inside catch promise");
+          // eslint-disable-next-line no-console
+          console.log(JSON.stringify(error));
         });
     },
     onReset(evt) {
