@@ -23,7 +23,26 @@
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group label="Gender:" label-for="input-3">
+        <b-form-group label="Password:" label-for="input-3">
+          <b-form-input
+            v-model="form.password"
+            required
+            type="password"
+            placeholder="Enter password"
+          ></b-form-input>
+        </b-form-group>
+
+        <b-form-group label="Confirm Password:" label-for="input-4">
+          <b-form-input
+            ref="confirmPassword"
+            v-model="confirmPassword"
+            required
+            placeholder="Confirm password"
+            type="password"
+          ></b-form-input>
+        </b-form-group>
+
+        <b-form-group label="Gender:" label-for="input-5">
           <b-form-select
             v-model="form.gender"
             :options="genders"
@@ -32,25 +51,36 @@
         </b-form-group>
 
         <b-form-group>
-          <b-form-checkbox-group v-model="form.checked" id="checkboxes-4">
-            <b-form-checkbox value="accept_the_agreement"
-              >I agree to submit my data</b-form-checkbox
-            >
-          </b-form-checkbox-group>
+          <b-form-checkbox
+            value="true"
+            v-model="form.agreement"
+            name="agreement"
+            required
+            >I agree to submit my data</b-form-checkbox
+          >
         </b-form-group>
 
         <b-button type="submit" variant="primary">Submit</b-button>
         <b-button type="reset" variant="danger">Reset</b-button>
       </b-form>
-      <b-card class="mt-3" header="Form Data Result">
-        <pre class="m-0">{{ form }}</pre>
+      <b-card
+        class="mt-3 text-danger"
+        header="Login Information:"
+        v-if="error || success"
+      >
+        <p class="text-danger" v-if="error">
+          An error occurred during signup process. Please try later or see the
+          console for detailed error msg.
+        </p>
+        <p class="text-success" v-if="success">
+          You have successfully created a signup account!!!
+        </p>
       </b-card>
     </b-col>
   </b-row>
 </template>
 
 <script>
-
 import axios from "axios";
 
 export default {
@@ -59,29 +89,50 @@ export default {
       form: {
         email: "",
         name: "",
+        password: "",
         gender: null,
-        checked: []
+        agreement: null
       },
+      error: false,
+      success: false,
       genders: [{ text: "Select Gender", value: null }, "Male", "Female"],
-      show: true
+      show: true,
+      confirmPassword: ""
     };
   },
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
+      if (this.$refs["confirmPassword"].value !== this.form.password) {
+        alert("Please confirm correct password!!!");
+        this.$refs["confirmPassword"].focus();
+        return;
+      }
       // alert(JSON.stringify(this.form));
-      // eslint-disable-next-line no-console
-      axios.post('/users.json',this.form).then(res => {console.log('im requesting the data');console.log(res)}).catch(err => {console.log('this is message from the error of get request');console.log(err)});
-      setTimeout(()=>{
-      // eslint-disable-next-line no-console
-      axios.get('/node1.json').then(res=>this.form=res.data).catch(err=>console.log(err));
-
-      },3000)
+      this.error = false;
+      axios
+        .post("/users.json", this.form)
+        .then(res => {
+          this.success = true;
+          // eslint-disable-next-line no-console
+          console.log("im requesting the data");
+          // eslint-disable-next-line no-console
+          console.log(res);
+        })
+        .catch(err => {
+          this.error = true;
+          // eslint-disable-next-line no-console
+          console.log(err);
+        });
     },
     onReset(evt) {
       evt.preventDefault();
       // Reset our form values
+      this.error = false;
+      this.success = false;
       this.form.email = "";
+      this.form.password = "";
+      this.$refs["confirmPassword"] = "";
       this.form.name = "";
       this.form.gender = null;
       this.form.checked = [];
