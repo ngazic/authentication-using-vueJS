@@ -41,8 +41,7 @@
 </template>
 
 <script>
-import axios from "axios";
-let apiKey = "AIzaSyCHKRges3G-vbAlsrjyg6CyPzmQ-zAmJIo";
+import { mapActions } from "vuex";
 
 export default {
   data() {
@@ -57,27 +56,13 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["login"]),
     onSubmit(evt) {
       evt.preventDefault();
       // alert(JSON.stringify(this.form));
-      axios
-        .post("/accounts:signInWithPassword?key=" + apiKey, {
-          email: this.form.email,
-          password: this.form.password,
-          returnSecureToken: true
-        })
-        .then(res => {
-          this.success = true;
-          // eslint-disable-next-line no-console
-          console.log("im requesting the data");
-          // eslint-disable-next-line no-console
-          console.log(res);
-        })
-        .catch(err => {
-          this.error = true;
-          // eslint-disable-next-line no-console
-          console.log(err);
-        });
+      this.login(this.form)
+        .then(() => alert("Login success!!!"))
+        .catch(() => alert("Login error!!"));
     },
     onReset(evt) {
       evt.preventDefault();

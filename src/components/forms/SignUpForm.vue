@@ -15,14 +15,6 @@
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group label="Your Name:" label-for="input-2">
-          <b-form-input
-            v-model="form.name"
-            required
-            placeholder="Enter name"
-          ></b-form-input>
-        </b-form-group>
-
         <b-form-group label="Password:" label-for="input-3">
           <b-form-input
             ref="passwrd"
@@ -41,14 +33,6 @@
             placeholder="Confirm password"
             type="password"
           ></b-form-input>
-        </b-form-group>
-
-        <b-form-group label="Gender:" label-for="input-5">
-          <b-form-select
-            v-model="form.gender"
-            :options="genders"
-            required
-          ></b-form-select>
         </b-form-group>
 
         <b-form-group>
@@ -82,28 +66,27 @@
 </template>
 
 <script>
-import axios from "axios";
-let apiKey = "AIzaSyCHKRges3G-vbAlsrjyg6CyPzmQ-zAmJIo";
+/* eslint-disable */
+import { mapActions } from "vuex";
+
 
 export default {
   data() {
     return {
       form: {
         email: "",
-        name: "",
         password: "",
         returnSecureToken: true,
-        gender: null,
         agreement: null
       },
       error: false,
       success: false,
-      genders: [{ text: "Select Gender", value: null }, "Male", "Female"],
       show: true,
       confirmPassword: ""
     };
   },
   methods: {
+    ...mapActions(["signup"]),
     onSubmit(evt) {
       evt.preventDefault();
       if (this.form.password.length < 6) {
@@ -117,26 +100,10 @@ export default {
       }
       // alert(JSON.stringify(this.form));
       this.error = false;
-      axios
-        .post("/accounts:signUp?key=" + apiKey, {
-          email: this.form.email,
-          password: this.form.password,
-          returnSecureToken: this.form.returnSecureToken
-        })
-        .then(res => {
-          this.success = true;
-          // eslint-disable-next-line no-console
-          console.log("im requesting the data");
-          // eslint-disable-next-line no-console
-          console.log(res);
-        })
-        .catch(error => {
-          this.error = true;
-          // eslint-disable-next-line no-console
-          console.log("this is message inside catch promise");
-          // eslint-disable-next-line no-console
-          console.log(JSON.stringify(error));
-        });
+      
+        this.signup(this.form).then(res => {
+          this.success = res;
+        }).catch(err => this.error = err);
     },
     onReset(evt) {
       evt.preventDefault();
@@ -147,7 +114,6 @@ export default {
       this.form.password = "";
       this.$refs["confirmPassword"] = "";
       this.form.name = "";
-      this.form.gender = null;
       this.form.checked = [];
       // Trick to reset/clear native browser form validation state
       this.show = false;

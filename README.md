@@ -23,7 +23,11 @@ npm run lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-### To disable linter for console.log use
+### To disable linter for console.log use in one line
 ```
 // eslint-disable-next-line no-console
+```
+### To disable linter for file place this in first line of file
+```
+/* eslint-disable */
 ```
