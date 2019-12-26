@@ -1,13 +1,36 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Signup</router-link> |
-      <router-link to="/login">Login</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link v-if="!this.$store.getters.email" to="/"
+        >Signup |
+      </router-link>
+      <router-link v-if="!this.$store.getters.email" to="/login"
+        >Login</router-link
+      >
+      <router-link v-if="this.$store.getters.email" to="/about"
+        >About</router-link
+      >
     </div>
     <router-view />
+    <button class="absolute" v-if="this.$store.getters.email" @click="store">
+      Logout
+    </button>
   </div>
 </template>
+
+<script>
+import store from "./store/index.js";
+import router from "./router/index.js";
+
+export default {
+  methods: {
+    store: () => {
+      store.dispatch("logout");
+      router.replace("/login");
+    }
+  }
+};
+</script>
 
 <style>
 #app {
@@ -29,5 +52,9 @@
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.absolute {
+  position: absolute;
 }
 </style>

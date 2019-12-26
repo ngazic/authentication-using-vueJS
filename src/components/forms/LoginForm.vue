@@ -42,6 +42,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import router from "../../router/index.js";
 
 export default {
   data() {
@@ -61,8 +62,15 @@ export default {
       evt.preventDefault();
       // alert(JSON.stringify(this.form));
       this.login(this.form)
-        .then(() => alert("Login success!!!"))
-        .catch(() => alert("Login error!!"));
+        .then(() => {
+          alert("Login success!!!");
+          if (this.$store.getters.email) {
+            // eslint-disable-next-line no-console
+            console.log("change route");
+            router.push("about");
+          }
+        })
+        .catch(err => alert(err));
     },
     onReset(evt) {
       evt.preventDefault();
