@@ -1,16 +1,6 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link v-if="!this.$store.getters.email" to="/"
-        >Signup |
-      </router-link>
-      <router-link v-if="!this.$store.getters.email" to="/login"
-        >Login</router-link
-      >
-      <router-link v-if="this.$store.getters.email" to="/about"
-        >About</router-link
-      >
-    </div>
+    <Header></Header>
     <router-view />
     <button class="absolute" v-if="this.$store.getters.email" @click="store">
       Logout
@@ -21,6 +11,7 @@
 <script>
 import store from "./store/index.js";
 import router from "./router/index.js";
+import Header from "./views/Header.vue";
 
 export default {
   methods: {
@@ -28,6 +19,9 @@ export default {
       store.dispatch("logout");
       router.replace("/login");
     }
+  },
+  components: {
+    Header
   }
 };
 </script>
