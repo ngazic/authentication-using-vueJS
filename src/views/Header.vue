@@ -1,6 +1,6 @@
 <template>
   <div id="nav">
-    <router-link 
+    <router-link
       tag="li"
       active-class="active"
       exact
@@ -14,7 +14,7 @@
       active-class="active"
       to="/login"
     >
-    <a>Log In</a></router-link
+      <a>Log In</a></router-link
     >
     <router-link
       tag="li"
@@ -22,7 +22,7 @@
       active-class="active"
       to="/about"
     >
-    <a>About</a></router-link
+      <a>About</a></router-link
     >
   </div>
 </template>
